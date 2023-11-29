@@ -97,9 +97,6 @@ class ECSSpawner(Spawner):
         self.volume_size = int(os.environ["VOLUME_SIZE"])
         self.port_binding = 2222  # int(os.environ["PORT_BINDING"]) if "PORT_BINDING" in os.environ else None
 
-        # Custom environment for notebook
-        self.default_docker_image_gpu = os.environ["GPU_DOCKER_IMAGE"]
-
         self.custom_env = {
             "MLFLOW_TRACKING_URI": os.environ["MLFLOW_TRACKING_URI"],
             # "JUPYTERHUB_API_URL": f"http://{self.hub_host}:8081/hub/api",
