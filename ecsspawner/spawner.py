@@ -455,9 +455,9 @@ class ECSSpawner(Spawner):
             "environment": [
                 {"name": key, "value": value} for key, value in container_env.items()
             ],
-            "user": "root",
-            "workingDirectory": "/home/{0}".format(self.user.name),
-            # "command": ["python3 /usr/local/bin/start-singleuser.py"],
+            # "user": "root",
+            # "workingDirectory": "/home/{0}".format(self.user.name),
+            "command": ["python /usr/local/bin/start-singleuser.py"],
             "logConfiguration": {
                 "logDriver": "awslogs",
                 "options": {
