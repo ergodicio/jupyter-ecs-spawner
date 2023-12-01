@@ -457,7 +457,7 @@ class ECSSpawner(Spawner):
             ],
             "user": "root",
             "workingDirectory": "/home/{0}".format(self.user.name),
-            "command": ["python3 start-singleuser.py"],
+            "command": ["python3 /usr/local/bin/start-singleuser.py"],
             "logConfiguration": {
                 "logDriver": "awslogs",
                 "options": {
