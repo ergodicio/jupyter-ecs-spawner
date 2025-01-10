@@ -87,22 +87,22 @@ class ECSSpawner(Spawner):
         }
 
         # AWS environment variables
-        # self.hub_host = os.environ["HUB_HOSTNAME"]
-        # self.task_role_arn = os.environ["TASK_ROLE_ARN"]
-        # self.efs_id = os.environ["EFS_ID"]
-        # self.subnet_id = os.environ["SUBNET_ID"]
-        # self.sg_id = [os.environ["SECURITY_GROUP_ID"]]
-        # self.ecs_cluster = os.environ["ECS_CLUSTER"]
-        # self.instance_role_arn = os.environ["INSTANCE_ROLE_ARN"]
-        # self.default_volume_size = os.environ["VOLUME_SIZE"]
-        # self.volume_size = int(os.environ["VOLUME_SIZE"])
-        # self.port_binding = 2222  # int(os.environ["PORT_BINDING"]) if "PORT_BINDING" in os.environ else None
+        self.hub_host = os.environ["HUB_HOSTNAME"]
+        self.task_role_arn = os.environ["TASK_ROLE_ARN"]
+        self.efs_id = os.environ["EFS_ID"]
+        self.subnet_id = os.environ["SUBNET_ID"]
+        self.sg_id = [os.environ["SECURITY_GROUP_ID"]]
+        self.ecs_cluster = os.environ["ECS_CLUSTER"]
+        self.instance_role_arn = os.environ["INSTANCE_ROLE_ARN"]
+        self.default_volume_size = os.environ["VOLUME_SIZE"]
+        self.volume_size = int(os.environ["VOLUME_SIZE"])
+        self.port_binding = 2222  # int(os.environ["PORT_BINDING"]) if "PORT_BINDING" in os.environ else None
 
-        # self.custom_env = {
-        #     "MLFLOW_TRACKING_URI": os.environ["MLFLOW_TRACKING_URI"],
-        #     # "JUPYTERHUB_API_URL": f"http://{self.hub_host}:8081/hub/api",
-        #     # "JUPYTERHUB_ACTIVITY_URL": f"http://{self.hub_host}:8081/hub/api/users/test/activity",
-        # }
+        self.custom_env = {
+            "MLFLOW_TRACKING_URI": os.environ["MLFLOW_TRACKING_URI"],
+            # "JUPYTERHUB_API_URL": f"http://{self.hub_host}:8081/hub/api",
+            # "JUPYTERHUB_ACTIVITY_URL": f"http://{self.hub_host}:8081/hub/api/users/test/activity",
+        }
 
     def get_private_efs_ids(self):
         efs_client = boto3.client("efs")
