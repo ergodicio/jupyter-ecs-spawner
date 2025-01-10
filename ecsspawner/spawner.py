@@ -78,13 +78,6 @@ class ECSSpawner(Spawner):
 
         self.instance_id = None
         self.task_definition_arn = None
-        self.user_options = {
-            "instance": "c6i.2xlarge",
-            "spot": False,
-            "region": "us-east-1",
-            "image": "",
-            "volume": "",
-        }
 
         # AWS environment variables
         self.hub_host = os.environ["HUB_HOSTNAME"]
@@ -174,6 +167,26 @@ class ECSSpawner(Spawner):
                 i += 1
                 yield {"message": events[i]}
             await asyncio.sleep(1)
+
+    @traitlets.default("options_form")
+    def _options_form(self):
+        default_env = "YOURNAME=%s\n" % self.user.name
+        return """
+        <label for="instance">Instance Type</label>
+        <input name="instance" placeholder="c6i.2xlarge"></input>
+        """.format(
+            env=default_env
+        )
+
+    def options_from_form(self, formdata):
+        """Turn html formdata (always lists of strings) into the dict we want."""
+        return {
+            "instance": "c6i.2xlarge",
+            "spot": False,
+            "region": "us-east-1",
+            "image": "",
+            "volume": "",
+        }
 
     # def _options_form_default(self):
     #     tmpl = pkgutil.get_data("ecsspawner", "form_template.html").decode()
