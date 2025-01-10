@@ -180,13 +180,7 @@ class ECSSpawner(Spawner):
 
     def options_from_form(self, formdata):
         """Turn html formdata (always lists of strings) into the dict we want."""
-        return {
-            "instance": "c6i.2xlarge",
-            "spot": False,
-            "region": "us-east-1",
-            "image": "",
-            "volume": "",
-        }
+        return {"instance": "c6i.2xlarge", "spot": False, "region": "us-east-1", "image": "", "volume": ""}
 
     # def _options_form_default(self):
     #     tmpl = pkgutil.get_data("ecsspawner", "form_template.html").decode()
@@ -448,18 +442,18 @@ class ECSSpawner(Spawner):
                     "awslogs-group": "/jupyterhub/jupyter-logs-{0}".format(self.user.name),
                 },
             },
-            "mountPoints": [
-                {
-                    "sourceVolume": "shared-persistent-volume",
-                    "containerPath": f"/home/{self.user.name}/shared",
-                    "readOnly": False,
-                },
-                {
-                    "sourceVolume": "private-persistent-volume",
-                    "containerPath": f"/home/{self.user.name}/private",
-                    "readOnly": False,
-                },
-            ],
+            # "mountPoints": [
+            #     {
+            #         "sourceVolume": "shared-persistent-volume",
+            #         "containerPath": f"/home/{self.user.name}/shared",
+            #         "readOnly": False,
+            #     },
+            #     {
+            #         "sourceVolume": "private-persistent-volume",
+            #         "containerPath": f"/home/{self.user.name}/private",
+            #         "readOnly": False,
+            #     },
+            # ],
             "linuxParameters": {"sharedMemorySize": int(self.volume_size / 4) * 1000},
         }
         logger.info(f"Container definition: {container_def}")
