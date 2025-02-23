@@ -442,12 +442,13 @@ class ECSSpawner(Spawner):
                     "awslogs-group": "/jupyterhub/jupyter-logs-{0}".format(self.user.name),
                 },
             },
-            # "mountPoints": [
-            #     {
-            #         "sourceVolume": "shared-persistent-volume",
-            #         "containerPath": f"/home/{self.user.name}/shared",
-            #         "readOnly": False,
-            #     },
+            "mountPoints": [
+                {
+                    "sourceVolume": "shared-persistent-volume",
+                    "containerPath": f"/home/{self.user.name}/shared",
+                    "readOnly": False,
+                }
+            ],
             #     {
             #         "sourceVolume": "private-persistent-volume",
             #         "containerPath": f"/home/{self.user.name}/private",
