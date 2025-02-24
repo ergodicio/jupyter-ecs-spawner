@@ -134,7 +134,7 @@ class ECSSpawner(Spawner):
         if self.user_options["volume"] != "":
             self.volume_size = int(self.user_options["volume"])
 
-        instance_id = await self.__spawn_ec2(self.user_options["instance"])
+        instance_id = await self.__spawn_ec2(self.user_options["instance"], self.instance_type)
         with ThreadPoolExecutor(1) as executor:
             future = asyncio.wrap_future(executor.submit(self.__create_ecs_task))
             await asyncio.wrap_future(future)
@@ -333,33 +333,28 @@ class ECSSpawner(Spawner):
             ]
         return instance_id
 
-    async def __spawn_ec2(self, tpe):
+    async def __spawn_ec2(self, tpe, instance_name):
         region = self.user_options["region"]
-        if self.instances[region][tpe].get("gpu"):
+        if tpe == "gpu":
             if self.ec2_gpu_ami != "":
                 ami = self.ec2_gpu_ami
             else:
                 ami = self.amis[region]["gpu"]
-        elif self.instances[region][tpe]["arch"] == "x86_64" or self.instances[region][tpe]["arch"] == "i386":
+        else:
             if self.ec2_ami != "":
                 ami = self.ec2_ami
             else:
                 ami = self.amis[region]["amd"]
-        else:
-            if self.ec2_arm_ami != "":
-                ami = self.ec2_arm_ami
-            else:
-                ami = self.amis[region]["arm64"]
 
         self.log.info("Using AMI {0}".format(ami))
         if (self.user_options.get("spot") is None) or (self.user_options["spot"] is False):
-            self.state.append("Requesting {0} non spot instance".format(tpe))
+            self.state.append("Requesting {0} non spot instance".format(instance_name))
             spawn_method = self.__run_instance
         else:
-            self.state.append("Requesting {0} spot instance".format(tpe))
+            self.state.append("Requesting {0} spot instance".format(instance_name))
             spawn_method = self.__request_spot_instance
         with ThreadPoolExecutor(1) as executor:
-            future = asyncio.wrap_future(executor.submit(spawn_method, ami, tpe, region))
+            future = asyncio.wrap_future(executor.submit(spawn_method, ami, instance_name, region))
             await asyncio.wrap_future(future)
             self.instance_id = future.result()
         self.log.info("Finished spawning EC2")
