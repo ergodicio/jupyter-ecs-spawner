@@ -123,7 +123,13 @@ class ECSSpawner(Spawner):
         pass
 
     async def start(self):
-        self.instance_type = self.user_options["instance"]
+        if self.user_options["instance"] == "gpu":
+            self.instance_type = "g5.xlarge"
+        elif self.user_options["instance"] == "cpu":
+            self.instance_type = "c6i.xlarge"
+        else:
+            raise ValueError("Invalid instance type")
+
         self.region = self.user_options["region"]
         if self.user_options["volume"] != "":
             self.volume_size = int(self.user_options["volume"])
@@ -170,17 +176,29 @@ class ECSSpawner(Spawner):
 
     @traitlets.default("options_form")
     def _options_form(self):
-        default_env = "YOURNAME=%s\n" % self.user.name
         return """
         <label for="instance">Instance Type</label>
-        <input name="instance" placeholder="c6i.2xlarge"></input>
-        """.format(
-            env=default_env
-        )
+        <select name="instance" class="form-control">
+            <option value="gpu">GPU Instance</option>
+            <option value="cpu">CPU Instance</option>
+        </select>
+        <br />
+        <label for="region">Region</label>
+        <input name="region" placeholder="us-east-1" class="form-control"></input>
+        <br />
+        <label for="volume">Root Volume Size (GiB)</label>
+        <input name="volume" type="number" placeholder="30" class="form-control"></input>
+        <br />
+        <label for="spot">Spot Instance</label>
+        <input name="spot" type="checkbox" class="form-check-input"></input>
+        <br />
+        <label for="image">Docker Image</label>
+        <input name="image" placeholder="jupyter/datascience-notebook:notebook-6.4.0" class="form-control"></input>
+        """
 
-    def options_from_form(self, formdata):
-        """Turn html formdata (always lists of strings) into the dict we want."""
-        return {"instance": "c6i.2xlarge", "spot": False, "region": "us-east-1", "image": "", "volume": ""}
+    # def options_from_form(self, formdata):
+    #     """Turn html formdata (always lists of strings) into the dict we want."""
+    #     return {"instance": "c6i.2xlarge", "spot": False, "region": "us-east-1", "image": "", "volume": ""}
 
     # def _options_form_default(self):
     #     tmpl = pkgutil.get_data("ecsspawner", "form_template.html").decode()
@@ -190,15 +208,15 @@ class ECSSpawner(Spawner):
     #         regions=pkgutil.get_data("ecsspawner", "regions.json").decode(),
     #     )
 
-    # def options_from_form(self, formdata):
-    #     self.log.debug("Form args: {0}".format(formdata))
-    #     return {
-    #         "instance": formdata["instance"][0],
-    #         "spot": formdata.get("spot"),
-    #         "region": formdata["region"][0],
-    #         "image": formdata["image"][0],
-    #         "volume": formdata["volume"][0],
-    #     }
+    def options_from_form(self, formdata):
+        self.log.debug("Form args: {0}".format(formdata))
+        return {
+            "instance": formdata["instance"][0],
+            "spot": formdata.get("spot"),
+            "region": formdata["region"][0],
+            "image": formdata["image"][0],
+            "volume": formdata["volume"][0],
+        }
 
     def __run_instance(self, ami, tpe, region):
         ec2_client = boto3.client("ec2", region_name=region)
@@ -334,7 +352,7 @@ class ECSSpawner(Spawner):
                 ami = self.amis[region]["arm64"]
 
         self.log.info("Using AMI {0}".format(ami))
-        if self.user_options.get("spot") is None:
+        if (self.user_options.get("spot") is None) or (self.user_options["spot"] is False):
             self.state.append("Requesting {0} non spot instance".format(tpe))
             spawn_method = self.__run_instance
         else:
