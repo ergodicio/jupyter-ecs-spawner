@@ -492,29 +492,29 @@ class ECSSpawner(Spawner):
 
         # Add the shared EFS drive, and
         # then also add the private EFS drive if the user has one
-        volumes = [
-            {
-                "name": "shared-persistent-volume",
-                "efsVolumeConfiguration": {
-                    "fileSystemId": self.efs_id,
-                    "transitEncryption": "DISABLED",
-                },
-            }
-        ]
-        efs_private_id = self.get_private_efs_ids()
+        volumes = []
+        #     {
+        #         "name": "shared-persistent-volume",
+        #         "efsVolumeConfiguration": {
+        #             "fileSystemId": self.efs_id,
+        #             "transitEncryption": "DISABLED",
+        #         },
+        #     }
+        # ]
+        # efs_private_id = self.get_private_efs_ids()
 
         # Use only user names before a '-' for EFS drive name
-        user_root_string = self.user.name.split("-")[0]
-        if user_root_string in efs_private_id.keys():
-            volumes.append(
-                {
-                    "name": "private-persistent-volume",
-                    "efsVolumeConfiguration": {
-                        "fileSystemId": efs_private_id[user_root_string],
-                        "transitEncryption": "DISABLED",
-                    },
-                }
-            )
+        # user_root_string = self.user.name.split("-")[0]
+        # if user_root_string in efs_private_id.keys():
+        #     volumes.append(
+        #         {
+        #             "name": "private-persistent-volume",
+        #             "efsVolumeConfiguration": {
+        #                 "fileSystemId": efs_private_id[user_root_string],
+        #                 "transitEncryption": "DISABLED",
+        #             },
+        #         }
+        #     )
 
         r = ecs_client.register_task_definition(
             family="jupyter-task-{0}".format(self.user.name),
