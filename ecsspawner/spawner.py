@@ -39,7 +39,7 @@ class ECSSpawner(Spawner):
     )  # ARN of the role to associate with the EC2 instances. Must grant access to ECS.
     default_docker_image = traitlets.Unicode(
         config=True
-    )  # Name of the docker image to use by default for the ECS task (eg, jupyter/datascience-notebook:notebook-6.4.0)
+    )  # Name of the docker image to use by default for the ECS task (eg, jupyter/scipy-notebook:lab-4.4.3)
     default_docker_image_gpu = traitlets.Unicode(
         config=True
     )  # Name of the docker image to use by default for the ECS task, if the underlying instance has a GPU
@@ -196,7 +196,7 @@ class ECSSpawner(Spawner):
         <br />
         <label for="image">Docker Image</label>
         <select name="image" class="form-control">
-            <option value="jupyter/datascience-notebook:notebook-6.4.0">JupyterImage</option>
+            <option value="jupyter/scipy-notebook:lab-4.4.3">JupyterImage</option>
         </select>
         <br />
         """
