@@ -428,10 +428,10 @@ class ECSSpawner(Spawner):
         if self.user_options["image"] != "":
             container_image = self.user_options["image"]
         else:
-            if self.instances[region][self.user_options["instance"]].get("gpu") is not None:
-                container_image = self.default_docker_image_gpu
-            else:
-                container_image = self.default_docker_image
+            # if self.instances[region][self.user_options["instance"]].get("gpu") is not None:
+                # container_image = self.default_docker_image_gpu
+            # else:
+            container_image = self.default_docker_image
         container_env = copy.deepcopy(self.get_env())
         # make this configurable ?
         container_env["GRANT_SUDO"] = "yes"
@@ -481,11 +481,11 @@ class ECSSpawner(Spawner):
             container_def["portMappings"] = ({"containerPort": self.port_binding, "hostPort": self.port_binding},)
             self.log.info(f"Binding port = {self.port_binding}")
 
-        if self.instances[region][self.user_options["instance"]].get("gpu") is not None:
-            num_gpus = self.instances[region][self.user_options["instance"]]["gpu"]["count"]
-            print(f"gpus = {num_gpus}")
-            container_def["resourceRequirements"] = [{"type": "GPU", "value": str(num_gpus)}]
-            self.log.info(f"Using {num_gpus} x GPU")
+        # if self.instances[region][self.user_options["instance"]].get("gpu") is not None:
+            # num_gpus = self.instances[region][self.user_options["instance"]]["gpu"]["count"]
+            # print(f"gpus = {num_gpus}")
+            # container_def["resourceRequirements"] = [{"type": "GPU", "value": str(num_gpus)}]
+            # self.log.info(f"Using {num_gpus} x GPU")
 
         self.log.info("Creating ECS task def")
         self.state.append("Creating ECS task def")
