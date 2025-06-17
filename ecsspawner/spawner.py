@@ -125,7 +125,7 @@ class ECSSpawner(Spawner):
     async def start(self):
         if self.user_options["instance"] == "gpu":
             self.instance_type = "g5.xlarge"
-        elif self.user_options["instance"] == "cpu":
+        elif self.user_options["instance"] == "amd":
             self.instance_type = "c6i.xlarge"
         else:
             raise ValueError("Invalid instance type")
@@ -180,11 +180,13 @@ class ECSSpawner(Spawner):
         <label for="instance">Instance Type</label>
         <select name="instance" class="form-control">
             <option value="gpu">GPU Instance</option>
-            <option value="cpu">CPU Instance</option>
+            <option value="amd">CPU Instance</option>
         </select>
         <br />
         <label for="region">Region</label>
-        <input name="region" placeholder="us-east-1" class="form-control"></input>
+        <select name="region" class="form-control">
+            <option value="us-east-1">US-East-1</option>
+        </select>
         <br />
         <label for="volume">Root Volume Size (GiB)</label>
         <input name="volume" type="number" placeholder="30" class="form-control"></input>
@@ -193,7 +195,10 @@ class ECSSpawner(Spawner):
         <input name="spot" type="checkbox" class="form-check-input"></input>
         <br />
         <label for="image">Docker Image</label>
-        <input name="image" placeholder="jupyter/datascience-notebook:notebook-6.4.0" class="form-control"></input>
+        <select name="image" class="form-control">
+            <option value="jupyter/datascience-notebook:notebook-6.4.0">JupyterImage</option>
+        </select>
+        <br />
         """
 
     # def options_from_form(self, formdata):
@@ -333,9 +338,9 @@ class ECSSpawner(Spawner):
             ]
         return instance_id
 
-    async def __spawn_ec2(self, tpe, instance_name):
+    async def __spawn_ec2(self, machine_type, instance_name):
         region = self.user_options["region"]
-        if tpe == "gpu":
+        if machine_type == "gpu":
             if self.ec2_gpu_ami != "":
                 ami = self.ec2_gpu_ami
             else:
