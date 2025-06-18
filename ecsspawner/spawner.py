@@ -459,13 +459,13 @@ class ECSSpawner(Spawner):
                     "awslogs-group": "/jupyterhub/jupyter-logs-{0}".format(self.user.name),
                 },
             },
-            "mountPoints": [],
-            #     {
-            #         "sourceVolume": "shared-persistent-volume",
-            #         "containerPath": f"/home/{self.user.name}/shared",
-            #         "readOnly": False,
-            #     }
-            # ],
+            "mountPoints": [
+                {
+                    "sourceVolume": "shared-persistent-volume",
+                    "containerPath": f"/home/{self.user.name}/shared",
+                    "readOnly": False,
+                },
+            ],
             #     {
             #         "sourceVolume": "private-persistent-volume",
             #         "containerPath": f"/home/{self.user.name}/private",
@@ -491,15 +491,15 @@ class ECSSpawner(Spawner):
 
         # Add the shared EFS drive, and
         # then also add the private EFS drive if the user has one
-        volumes = []
-        #     {
-        #         "name": "shared-persistent-volume",
-        #         "efsVolumeConfiguration": {
-        #             "fileSystemId": self.efs_id,
-        #             "transitEncryption": "DISABLED",
-        #         },
-        #     }
-        # ]
+        volumes = [
+            {
+                "name": "shared-persistent-volume",
+                "efsVolumeConfiguration": {
+                    "fileSystemId": self.efs_id,
+                    "transitEncryption": "DISABLED",
+                },
+            }
+        ]
         # efs_private_id = self.get_private_efs_ids()
 
         # Use only user names before a '-' for EFS drive name
