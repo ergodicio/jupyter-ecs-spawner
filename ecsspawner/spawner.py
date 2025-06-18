@@ -179,7 +179,6 @@ class ECSSpawner(Spawner):
         return """
         <label for="instance">Instance Type</label>
         <select name="instance" class="form-control">
-            <option value="gpu">GPU Instance</option>
             <option value="amd">CPU Instance</option>
         </select>
         <br />
@@ -196,7 +195,7 @@ class ECSSpawner(Spawner):
         <br />
         <label for="image">Docker Image</label>
         <select name="image" class="form-control">
-            <option value="quay.io/jupyter/scipy-notebook:lab-4.4.3">JupyterImage</option>
+            <option value="quay.io/jupyter/scipy-notebook:lab-4.4.3">SciPy JupyterLab</option>
         </select>
         <br />
         """
