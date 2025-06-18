@@ -196,7 +196,7 @@ class ECSSpawner(Spawner):
         <br />
         <label for="image">Docker Image</label>
         <select name="image" class="form-control">
-            <option value="jupyter/scipy-notebook:lab-4.4.3">JupyterImage</option>
+            <option value="quay.io/jupyter/scipy-notebook:lab-4.4.3">JupyterImage</option>
         </select>
         <br />
         """
